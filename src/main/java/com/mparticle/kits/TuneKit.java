@@ -8,6 +8,8 @@ import com.mparticle.kits.mobileapptracker.MATDeeplinkListener;
 import com.mparticle.kits.mobileapptracker.MATDeferredDplinkr;
 import com.mparticle.kits.mobileapptracker.MATUrlRequester;
 import com.mparticle.kits.mobileapptracker.MATUtils;
+import com.mparticle.kits_core.KitIntegration;
+import com.mparticle.kits_core.ReportingMessage;
 
 import java.util.List;
 import java.util.Map;
@@ -18,7 +20,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * does not actually wrap the full Tune SDK - only a small subset of classes required to query the Tune server
  * for deep links that match the given user.
  */
-public class TuneKit extends KitIntegration implements MATDeeplinkListener, KitIntegration.ApplicationStateListener {
+public class TuneKit extends AbstractKitIntegration implements MATDeeplinkListener, KitIntegration.ApplicationStateListener {
 
     private static final String SETTING_ADVERTISER_ID = "advertiserId";
     private static final String SETTING_CONVERSION_KEY = "conversionKey";
@@ -35,7 +37,7 @@ public class TuneKit extends KitIntegration implements MATDeeplinkListener, KitI
     }
 
     @Override
-    protected List<ReportingMessage> onKitCreate(Map<String, String> settings, Context context) {
+    public List<ReportingMessage> onKitCreate(Map<String, String> settings, Context context) {
         if (MATUtils.firstInstall(getContext())) {
             settingAdvertiserId = getSettings().get(SETTING_ADVERTISER_ID);
             settingConversionKey = getSettings().get(SETTING_CONVERSION_KEY);
