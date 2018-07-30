@@ -8,8 +8,8 @@ import com.mparticle.kits.mobileapptracker.MATDeeplinkListener;
 import com.mparticle.kits.mobileapptracker.MATDeferredDplinkr;
 import com.mparticle.kits.mobileapptracker.MATUrlRequester;
 import com.mparticle.kits.mobileapptracker.MATUtils;
-import com.mparticle.kits_core.KitIntegration;
-import com.mparticle.kits_core.ReportingMessage;
+import com.mparticle.kits.core.KitIntegration;
+import com.mparticle.kits.core.ReportingMessage;
 
 import java.util.List;
 import java.util.Map;
@@ -83,7 +83,7 @@ public class TuneKit extends AbstractKitIntegration implements MATDeeplinkListen
         AttributionResult result = new AttributionResult()
                 .setLink(deeplink)
                 .setServiceProviderId(getConfiguration().getKitId());
-        getKitManager().onResult(result);
+        getAttributionListener().onResult(result);
     }
 
     @Override
@@ -92,7 +92,7 @@ public class TuneKit extends AbstractKitIntegration implements MATDeeplinkListen
         AttributionError deepLinkError = new AttributionError()
                 .setMessage(error)
                 .setServiceProviderId(getConfiguration().getKitId());
-        getKitManager().onError(deepLinkError);
+        getAttributionListener().onError(deepLinkError);
     }
 
     @Override
