@@ -10,7 +10,7 @@ class MATDeferredDplinkr private constructor() {
     var conversionKey: String? = null
     var packageName: String? = null
     var googleAdvertisingId: String? = null
-    private set
+        private set
 
     var googleAdTrackingLimited = 0
 
@@ -18,18 +18,20 @@ class MATDeferredDplinkr private constructor() {
     var userAgent: String? = null
     var listener: MATDeeplinkListener? = null
 
-
-
-    fun setGoogleAdvertisingId(googleAdvertisingId: String?, isLATEnabled: Int) {
+    fun setGoogleAdvertisingId(
+        googleAdvertisingId: String?,
+        isLATEnabled: Int,
+    ) {
         dplinkr?.googleAdvertisingId = googleAdvertisingId
         dplinkr?.googleAdTrackingLimited = isLATEnabled
     }
 
-
-
-
-    fun checkForDeferredDeeplink(context: Context?, urlRequester: MATUrlRequester) {
-        Thread { // If advertiser ID, conversion key, or package name were not set, return
+    fun checkForDeferredDeeplink(
+        context: Context?,
+        urlRequester: MATUrlRequester,
+    ) {
+        Thread {
+            // If advertiser ID, conversion key, or package name were not set, return
             if (dplinkr?.advertiserId == null || dplinkr?.conversionKey == null || dplinkr?.packageName == null) {
                 if (listener != null) {
                     listener?.didFailDeeplink("Advertiser ID, conversion key, or package name not set")
@@ -58,11 +60,12 @@ class MATDeferredDplinkr private constructor() {
     companion object {
         @Volatile
         private var dplinkr: MATDeferredDplinkr? = null
+
         @Synchronized
         fun initialize(
             advertiserId: String?,
             conversionKey: String?,
-            packageName: String?
+            packageName: String?,
         ): MATDeferredDplinkr? {
             dplinkr = MATDeferredDplinkr()
             dplinkr?.advertiserId = advertiserId

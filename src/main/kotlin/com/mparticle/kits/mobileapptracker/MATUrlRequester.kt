@@ -13,7 +13,8 @@ class MATUrlRequester {
 
         // Construct deeplink endpoint url
         val uri = Uri.Builder()
-        uri.scheme("https")
+        uri
+            .scheme("https")
             .authority(dplinkr.advertiserId + "." + MATConstants.DEEPLINK_DOMAIN)
             .appendPath("v1")
             .appendPath("link.txt")
@@ -23,13 +24,12 @@ class MATUrlRequester {
             .appendQueryParameter("package_name", dplinkr.packageName)
             .appendQueryParameter(
                 "ad_id",
-                if (dplinkr.googleAdvertisingId != null) dplinkr.googleAdvertisingId else dplinkr.androidId
-            )
-            .appendQueryParameter("user_agent", dplinkr.userAgent)
+                if (dplinkr.googleAdvertisingId != null) dplinkr.googleAdvertisingId else dplinkr.androidId,
+            ).appendQueryParameter("user_agent", dplinkr.userAgent)
         if (dplinkr.googleAdvertisingId != null) {
             uri.appendQueryParameter(
                 "google_ad_tracking_disabled",
-                dplinkr.googleAdTrackingLimited.toString()
+                dplinkr.googleAdTrackingLimited.toString(),
             )
         }
         try {

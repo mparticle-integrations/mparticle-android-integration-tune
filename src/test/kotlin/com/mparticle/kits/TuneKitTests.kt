@@ -8,7 +8,7 @@ import org.mockito.Mockito
 
 class TuneKitTests {
     private val kit: KitIntegration
-         get() = TuneKit()
+        get() = TuneKit()
 
     @Test
     @Throws(Exception::class)

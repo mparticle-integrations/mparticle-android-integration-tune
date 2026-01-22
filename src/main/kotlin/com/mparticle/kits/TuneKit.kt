@@ -1,35 +1,39 @@
 package com.mparticle.kits
 
 import android.content.Context
-import com.mparticle.kits.KitIntegration
-import com.mparticle.kits.mobileapptracker.MATDeeplinkListener
-import com.mparticle.kits.KitIntegration.ApplicationStateListener
-import com.mparticle.kits.mobileapptracker.MATDeferredDplinkr
-import java.util.concurrent.atomic.AtomicBoolean
-import com.mparticle.kits.ReportingMessage
-import com.mparticle.kits.mobileapptracker.MATUtils
-import com.mparticle.kits.TuneKit
-import com.mparticle.kits.KitUtils
-import com.mparticle.kits.mobileapptracker.MATUrlRequester
-import com.mparticle.AttributionResult
 import com.mparticle.AttributionError
+import com.mparticle.AttributionResult
+import com.mparticle.kits.KitIntegration
+import com.mparticle.kits.KitIntegration.ApplicationStateListener
+import com.mparticle.kits.KitUtils
+import com.mparticle.kits.ReportingMessage
+import com.mparticle.kits.TuneKit
+import com.mparticle.kits.mobileapptracker.MATDeeplinkListener
+import com.mparticle.kits.mobileapptracker.MATDeferredDplinkr
+import com.mparticle.kits.mobileapptracker.MATUrlRequester
+import com.mparticle.kits.mobileapptracker.MATUtils
+import java.util.concurrent.atomic.AtomicBoolean
 
 /**
  * Tune Kit implementing Tune's post-install deep-link feature. Different from other Kits, the Tune Kit
  * does not actually wrap the full Tune SDK - only a small subset of classes required to query the Tune server
  * for deep links that match the given user.
  */
-class TuneKit : KitIntegration(), MATDeeplinkListener, ApplicationStateListener {
+class TuneKit :
+    KitIntegration(),
+    MATDeeplinkListener,
+    ApplicationStateListener {
     private var settingAdvertiserId: String? = null
     private var settingConversionKey: String? = null
     var packageName: String? = null
     private var deepLinker: MATDeferredDplinkr? = null
     private val listenerWaiting = AtomicBoolean(false)
+
     override fun getName(): String = KIT_NAME
 
     override fun onKitCreate(
         settings: Map<String, String>,
-        context: Context
+        context: Context,
     ): List<ReportingMessage> {
         if (MATUtils.firstInstall(getContext())) {
             settingAdvertiserId = getSettings()[SETTING_ADVERTISER_ID]
@@ -38,11 +42,12 @@ class TuneKit : KitIntegration(), MATDeeplinkListener, ApplicationStateListener 
             if (KitUtils.isEmpty(packageName)) {
                 packageName = getContext().packageName
             }
-            deepLinker = MATDeferredDplinkr.initialize(
-                settingAdvertiserId,
-                settingConversionKey,
-                packageName
-            )
+            deepLinker =
+                MATDeferredDplinkr.initialize(
+                    settingAdvertiserId,
+                    settingConversionKey,
+                    packageName,
+                )
             deepLinker?.listener = this
             checkForAttribution()
         }
@@ -73,17 +78,19 @@ class TuneKit : KitIntegration(), MATDeeplinkListener, ApplicationStateListener 
 
     override fun didReceiveDeeplink(deeplink: String?) {
         listenerWaiting.set(false)
-        val result = AttributionResult()
-            .setLink(deeplink)
-            .setServiceProviderId(configuration.kitId)
+        val result =
+            AttributionResult()
+                .setLink(deeplink)
+                .setServiceProviderId(configuration.kitId)
         kitManager.onResult(result)
     }
 
     override fun didFailDeeplink(error: String?) {
         listenerWaiting.set(false)
-        val deepLinkError = AttributionError()
-            .setMessage(error)
-            .setServiceProviderId(configuration.kitId)
+        val deepLinkError =
+            AttributionError()
+                .setMessage(error)
+                .setServiceProviderId(configuration.kitId)
         kitManager.onError(deepLinkError)
     }
 

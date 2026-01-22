@@ -9,7 +9,11 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import com.mparticle.kits.KitUtils
 import com.mparticle.kits.TuneKit
-import java.io.*
+import java.io.BufferedReader
+import java.io.IOException
+import java.io.InputStream
+import java.io.InputStreamReader
+import java.io.UnsupportedEncodingException
 import java.lang.ref.WeakReference
 
 object MATUtils {
@@ -38,7 +42,10 @@ object MATUtils {
     /**
      * Determine the device's user agent and set the corresponding field.
      */
-    fun calculateUserAgent(context: Context?, tuneKit: TuneKit) {
+    fun calculateUserAgent(
+        context: Context?,
+        tuneKit: TuneKit,
+    ) {
         val userAgent = System.getProperty("http.agent", "")
         if (!KitUtils.isEmpty(userAgent)) {
             tuneKit.setUserAgent(userAgent)
@@ -66,9 +73,13 @@ object MATUtils {
      * Runnable for getting the WebView user agent
      */
     @SuppressLint("NewApi")
-    private class GetWebViewUserAgent(context: Context?, tuneKit: TuneKit) : Runnable {
+    private class GetWebViewUserAgent(
+        context: Context?,
+        tuneKit: TuneKit,
+    ) : Runnable {
         private val weakContext: WeakReference<Context?>
         private val tuneKit: TuneKit
+
         override fun run() {
             try {
                 Class.forName("android.os.AsyncTask") // prevents WebView from crashing on certain devices
